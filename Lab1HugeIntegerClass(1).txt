@@ -1,0 +1,383 @@
+/*
+Name : Shalom Ajimoko
+ID#: 400132439
+MAD ID: ajimokoa
+
+
+
+
+
+
+
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package hugeinteger;
+
+/**
+ *
+ * @author Shalom
+ */
+public class HugeInteger {
+
+    /**
+     * @param args the command line arguments
+     */
+   public static void main(String[] args) {
+        // TODO code application logic here
+    }
+    public boolean sign;
+    public int[] largenum;
+    public int size = 0;
+    
+    
+    public HugeInteger(String val ){
+        
+    
+        int valuelength = val.length();
+    
+    for (int i =0; i < valuelength; i++ ){
+        // checking to see if the input is actually a number (numbers don't have letters in them)
+        // ASCII values for digits 0to 9 are 48 to 57 
+        // ASCII value 45 is the minus sign, this is to check if the absolute value of the input is a number
+        // ASCII values were found on the internet
+        if((val.charAt(i)<48||val.charAt(i)>57)&&(val.charAt(i) != 45 )) {
+            throw new IllegalArgumentException("Non-digit characters input");
+            
+        }
+    }
+    
+    // Keeping count of leading zeroes if the number is not too large or larger than the limit
+    int zeroes;
+    zeroes = 0;
+    
+    for ( int x =0;x < valuelength ; x = x + 1 ){
+        if (val.charAt(x) == '0'){
+            zeroes = zeroes + 1;
+        }
+        
+        else{
+            break;
+        }
+           
+    }
+      
+    // If the value input is negative 
+    if(val.charAt(0) == '-'){
+        sign = false;
+        int [] newArray  = new int[valuelength-zeroes-1]; 
+// take into account zeroes and the index of negative side
+        for (int y = zeroes; y < newArray.length ; y++ ){
+            newArray[y] = val.charAt(y+1) - 48; 
+            
+        }
+        size = newArray.length;
+        largenum = newArray; 
+       
+    }
+    else{ //if the value is positive
+        int [] newArray = new int[valuelength - zeroes];
+        sign = true;
+        for(int x = zeroes; x < newArray.length ; x++ ){
+            newArray[x] = val.charAt(x) - 48; 
+        }
+        
+        
+        size = newArray.length;
+        this.largenum = newArray;
+
+    }
+
+    }
+    
+    public HugeInteger(int n){
+        // if a 0 as a number is given
+        if (n==0){
+            size = 1;
+            largenum = new int[1]; 
+            return;
+            
+        }
+        
+        int[] value = new int[n];
+        double signvalue = Math.random();
+        
+        if (signvalue > 0.5 ){
+            sign=false;
+        }
+        else {
+            sign=true;
+        }
+            value [0] = (int)Math.round(Math.random()*8 +1); // generate the first value from 
+        for (int i = 1; i<n; i++){
+            
+            value [i] =   (int)Math.round(Math.random()*9); // generate random values from 0 to 9  
+                
+        }
+        size = value.length;
+        this.largenum = value; // make the value a HUgeInteger number
+    }
+    
+    
+    public String toString(){
+        String valuestring = new String();
+        
+        if (this.sign == false){
+            valuestring = valuestring.concat("-");
+            
+        }
+        int a = this.largenum.length;
+        for (int i =0 ; i<a ; i++){
+            valuestring=valuestring.concat(""+ this.largenum[i]);
+        }
+        
+        return valuestring;
+        
+    }
+ 
+    public HugeInteger add(HugeInteger h){
+        
+        HugeInteger finalint;
+      
+        // if they are both negative or both positive
+        
+        if (this.sign == h.sign){
+            
+            int x = this.size; // size of the first number
+            int y = h.size; // size of the added number
+            
+            
+            // length of the list
+            int largestvalue;
+            if (x>y){
+                 largestvalue = x;
+            }
+            else {
+                largestvalue = y;
+            }
+// length of the list is based on the longest value, ir both ifthe lengths are the same
+            
+            if (x==y){
+                largestvalue = h.size;
+            }
+            
+            int num1 [] = new int[largestvalue];
+            int num2 [] = new int [largestvalue];
+            int sum [] = new int[largestvalue + 1];
+           
+            
+            int carrydigit =0;
+            int flag, digit = 0;
+            
+            String sumchar;
+            String sumstring = "";
+            
+           
+           if (x>=y){// the case where the first number is larger
+             //copying the number into an array
+               
+               for (int i = largestvalue - 1 ; i >= 0; i--){ //decrementing from least significant digit
+                  flag = carrydigit;
+                  carrydigit = 0;
+                  
+                  num1[i] = this.largenum[i];
+                   // only the indexes of the smaller value that exists are copied
+                   //if x is larger than y, then only the indexes of y that exsits are copied
+                   if ( i- (x-y)>= 0){
+                     num2[i] = h.largenum[i-(x-y)];  
+                   }
+                  
+                  digit = num1[i] + num2[i];
+                  if (( flag + digit) > 9){
+                      
+                      digit = digit - 10;// getting the value of modulo of 10
+                      carrydigit = carrydigit + 1;
+                    
+                  }
+                  sum[i+1]= digit + flag; //(i+1)because you'd want to have the numbers appear front to back
+                  //intead of printing the number from it's least significant digit on the left
+                
+                  
+                 sumchar = String.valueOf(sum[i]);
+                 sumstring = sumstring.concat(sumchar);
+               
+                   }
+               
+               finalint = new HugeInteger(sumstring);
+               
+               }
+           else{ // repeat this same process except the second number is larger
+               
+               for (int i = largestvalue -1; i>=0; i--){
+                   flag = carrydigit;
+                   carrydigit = 0;
+                   
+                   if (i-(y-x)>=0){    
+                       num1 [i] = this.largenum [i- (y-x)];
+                                   }
+                   num2 [i] = h.largenum [i];
+                   digit = num1[i] + num2[i];
+                   
+                   if (( flag + digit) >9){
+                       carrydigit = carrydigit + 1;
+                       digit = digit - 10; 
+                   }
+                       sum[ i+1] = digit + flag;
+               }
+               
+           }
+           
+           
+           if (carrydigit == 1){
+               sum[0] = sum[0] + 1; // case for final carry digit
+           }
+           
+           if (sum[0] == 0){
+               int [] lastsum = new int [largestvalue];
+               
+               for ( int i = 0; i< largestvalue ; i++){
+                   lastsum[i] = lastsum [i+1];
+               }
+               
+           
+           
+           HugeInteger lastsum2 = new HugeInteger(0);
+            
+           lastsum2.size = sum.length;
+           lastsum2.sign = this.sign;
+           lastsum2.largenum = lastsum; 
+           return lastsum2;
+           
+           }
+           else {
+           HugeInteger lastsum2 = new HugeInteger(0);
+           lastsum2.size = sum.length;
+           lastsum2.sign = this.sign;
+           lastsum2.largenum = sum; 
+           }
+    } 
+       //HugeInteger sumans = new HugeInteger(sumstring); 
+       //return sumans; 
+        
+        else{
+            int x = this.size;
+            int y = h.size;
+            
+            int equalflag =0;
+            if (x==y){
+                for ( int i = 0; i< this.size; i++){
+                    if (this.largenum[i]==h.largenum[i]){
+                        equalflag = equalflag + 1;
+                        
+                    }
+                }
+                if (this.largenum.length == equalflag){
+                    return new HugeInteger(0); // if the numbers are the same but the signs are opposite returnzero
+                    
+                }
+            }
+              int largestvalue;
+            if (x>y){
+                 largestvalue = x;
+            }
+            else {
+                largestvalue = y;
+            }
+            
+            int num1 [] = new int[largestvalue];
+            int num2 [] = new int [largestvalue];
+            int sum [] = new int[largestvalue + 1];
+           
+            
+            int carrydigit = 0;
+            int flag = 0;
+            int digit = 0;
+            int modulo;
+            String sumchar;
+            String sumstring = "";
+            
+             if (x>=y){
+             //copying the number into an array
+               for (int i = largestvalue - 1 ; i >= 0; i--){
+                   num1[i] = this.largenum[i];
+                   if ( i- (x-y)>= 0){
+                     num2[i] = h.largenum[i-(x-y)];  
+                   }
+                       
+                   
+             }
+               for (int i = largestvalue - 1 ; i >= 0; i--){
+                  flag = carrydigit;
+                  carrydigit =0;
+                  
+                  
+                  digit = num1[i] - num2[i];
+                  if (( flag + digit) < 0){
+                      carrydigit = carrydigit - 1;
+                      digit = digit + 10; // getting the value of modulo of 10
+                  }
+                  sum[i+1]= digit + flag;
+                   }
+               if (carrydigit == 1){
+                   
+                   sum[0] = sum[0] + 1; 
+// if there is a final carry, get the value of it inside the final array
+                   
+               }
+               
+               if (sum[0]==0){
+                   int [] lastsum = new int[largestvalue];
+                   for (int i =0; i<largestvalue; i++){
+                       lastsum[i]=sum[i+1];
+            
+                    }
+                   HugeInteger lastsum2 = new HugeInteger(0);
+                   lastsum2.largenum= lastsum;
+                   if ( x>y){
+                       lastsum2.sign =this.sign;
+                   }
+                   else{
+                       lastsum2.sign = h.sign;
+                       
+                   }
+                   lastsum2.size= lastsum.length;
+                   return lastsum2;
+                   
+
+                   }
+               else{
+                   HugeInteger lastsum2 = new HugeInteger(0);
+                   lastsum2.largenum = sum;
+                   
+                   if ( x>y){
+                       lastsum2.sign = this.sign;
+                   }
+                   else{
+                       lastsum2.sign = h.sign;
+                       
+                   }
+                   lastsum2.size = sum.length;
+                   return lastsum2;
+                   
+                   
+                   
+               }
+                   
+                   
+               } 
+               
+        } 
+            
+       
+       
+       
+       
+      
+ return finalint;   }
+    
+        
+        
+       
+    
+ }

@@ -1,0 +1,45 @@
+package hugeinteger;
+// Shalom Ajimoko
+// ID#": 400123439
+// MAC ID : ajimokoa
+
+
+
+/**
+ *
+ * @author Shalom
+ */
+public class TestHugeInteger {
+  public static void main(String[] args){
+    
+    String digit1 = "1563";
+    String digit2 = "4215";
+        
+        
+    HugeInteger number1 = new HugeInteger(digit1);
+    HugeInteger number2 = new HugeInteger(digit2);
+    HugeInteger answer = new HugeInteger(digit1);
+   // answer = number1.add(number2);
+    
+    //Testing random function
+    HugeInteger answer2 = new HugeInteger(12);
+    String ans = answer2.toString();
+    System.out.println(ans);
+    
+    
+    //
+    HugeInteger zeronum = new HugeInteger("0030000");
+    String zero = zeronum.toString();
+    System.out.println(zero);
+    
+    
+    
+    
+    
+ 
+     
+
+        
+    }
+    
+}
